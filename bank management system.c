@@ -21,6 +21,7 @@ struct {
     struct date dob;
     struct date deposit;
     struct date withdraw;
+    // with c
 
     }add,upd,check,rem,transaction;
 
