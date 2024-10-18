@@ -22,6 +22,61 @@ struct {
     struct date withdraw;
 
     }add,upd,check,rem,transaction;
+// // my
+// struct loan {
+//     double loan_amount;
+//     float interest_rate;
+//     int duration; // in months
+//     double total_repayment;
+//     double monthly_installment;
+// };
+
+// // my
+// void apply_loan() {
+//     struct loan new_loan;
+//     int loan_type;
+
+//     printf("\nChoose Loan Type:\n");
+//     printf("1. Personal Loan (Interest Rate: 10%%)\n");
+//     printf("2. Home Loan (Interest Rate: 8%%)\n");
+//     printf("3. Car Loan (Interest Rate: 9%%)\n");
+//     printf("Enter your choice: ");
+//     scanf("%d", &loan_type);
+
+//     switch (loan_type) {
+//         case 1:
+//             new_loan.interest_rate = 10.0;
+//             break;
+//         case 2:
+//             new_loan.interest_rate = 8.0;
+//             break;
+//         case 3:
+//             new_loan.interest_rate = 9.0;
+//             break;
+//         default:
+//             printf("Invalid choice!\n");
+//             return;
+//     }
+
+//     printf("Enter the loan amount: ");
+//     scanf("%lf", &new_loan.loan_amount);
+//     printf("Enter the duration (in months): ");
+//     scanf("%d", &new_loan.duration);
+
+//     // Calculate total repayment and monthly installment
+//     new_loan.total_repayment = new_loan.loan_amount * (1 + (new_loan.interest_rate / 100) * (new_loan.duration / 12.0));
+//     new_loan.monthly_installment = new_loan.total_repayment / new_loan.duration;
+
+//     // Display loan details
+//     printf("\nLoan Details:\n");
+//     printf("Loan Amount: $%.2f\n", new_loan.loan_amount);
+//     printf("Interest Rate: %.2f%%\n", new_loan.interest_rate);
+//     printf("Duration: %d months\n", new_loan.duration);
+//     printf("Total Repayment: $%.2f\n", new_loan.total_repayment);
+//     printf("Monthly Installment: $%.2f\n", new_loan.monthly_installment);
+
+//     // Save loan details to a file or database if needed
+// }
 
 float interest(float t,float amount,int rate)
 {
