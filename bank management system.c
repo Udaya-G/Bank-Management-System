@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<windows.h>
+#include <math.h>
 int i,j;
 int main_exit;
 void menu();
@@ -22,61 +23,37 @@ struct {
     struct date withdraw;
 
     }add,upd,check,rem,transaction;
-// // my
-// struct loan {
-//     double loan_amount;
-//     float interest_rate;
-//     int duration; // in months
-//     double total_repayment;
-//     double monthly_installment;
-// };
 
-// // my
-// void apply_loan() {
-//     struct loan new_loan;
-//     int loan_type;
+//my
+//  payments for a loan
+double calculateMonthlyPayment(double principal, double annualInterestRate, int loanTermMonths) {
+    double monthlyInterestRate = annualInterestRate / 12 / 100;
+    return (principal * monthlyInterestRate) / (1 - pow(1 + monthlyInterestRate, -loanTermMonths));
+}
 
-//     printf("\nChoose Loan Type:\n");
-//     printf("1. Personal Loan (Interest Rate: 10%%)\n");
-//     printf("2. Home Loan (Interest Rate: 8%%)\n");
-//     printf("3. Car Loan (Interest Rate: 9%%)\n");
-//     printf("Enter your choice: ");
-//     scanf("%d", &loan_type);
+// display loan options
+void displayLoanOptions() {
+    printf("Available Loan Options:\n");
+    printf("1. Personal Loan (Interest Rate: 5.5%%, Term: 5 years)\n");
+    printf("2. Home Loan (Interest Rate: 3.75%%, Term: 15 years)\n");
+    printf("3. Car Loan (Interest Rate: 4.25%%, Term: 7 years)\n");
+}
 
-//     switch (loan_type) {
-//         case 1:
-//             new_loan.interest_rate = 10.0;
-//             break;
-//         case 2:
-//             new_loan.interest_rate = 8.0;
-//             break;
-//         case 3:
-//             new_loan.interest_rate = 9.0;
-//             break;
-//         default:
-//             printf("Invalid choice!\n");
-//             return;
-//     }
+// show repayment schedule
+void showRepaymentSchedule(double principal, double annualInterestRate, int loanTermMonths) {
+    double monthlyPayment = calculateMonthlyPayment(principal, annualInterestRate, loanTermMonths);
+    double remainingBalance = principal;
+    double monthlyInterestRate = annualInterestRate / 12 / 100;
 
-//     printf("Enter the loan amount: ");
-//     scanf("%lf", &new_loan.loan_amount);
-//     printf("Enter the duration (in months): ");
-//     scanf("%d", &new_loan.duration);
-
-//     // Calculate total repayment and monthly installment
-//     new_loan.total_repayment = new_loan.loan_amount * (1 + (new_loan.interest_rate / 100) * (new_loan.duration / 12.0));
-//     new_loan.monthly_installment = new_loan.total_repayment / new_loan.duration;
-
-//     // Display loan details
-//     printf("\nLoan Details:\n");
-//     printf("Loan Amount: $%.2f\n", new_loan.loan_amount);
-//     printf("Interest Rate: %.2f%%\n", new_loan.interest_rate);
-//     printf("Duration: %d months\n", new_loan.duration);
-//     printf("Total Repayment: $%.2f\n", new_loan.total_repayment);
-//     printf("Monthly Installment: $%.2f\n", new_loan.monthly_installment);
-
-//     // Save loan details to a file or database if needed
-// }
+    printf("\nRepayment Schedule:\n");
+    printf("Month\tPayment\t\tInterest\tPrincipal\tRemaining Balance\n");
+    for (int i = 1; i <= loanTermMonths; i++) {
+        double interestPayment = remainingBalance * monthlyInterestRate;
+        double principalPayment = monthlyPayment - interestPayment;
+        remainingBalance -= principalPayment;
+        printf("%d\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\n", i, monthlyPayment, interestPayment, principalPayment, remainingBalance);
+    }
+}
 
 float interest(float t,float amount,int rate)
 {
@@ -541,13 +518,60 @@ void see(void)
 
 }
 
+int loan()
+{
+    int loanOption;
+    double principal;
+    double annualInterestRate;
+    int loanTermMonths;
+
+    displayLoanOptions();
+
+    printf("Select a loan option (1-3): ");
+    scanf("%d", &loanOption);
+
+    switch (loanOption) {
+        case 1:
+            annualInterestRate = 5.5;
+            loanTermMonths = 5 * 12;
+            break;
+        case 2:
+            annualInterestRate = 3.75;
+            loanTermMonths = 15 * 12;
+            break;
+        case 3:
+            annualInterestRate = 4.25;
+            loanTermMonths = 7 * 12;
+            break;
+        default:
+            printf("Invalid loan option selected.\n");
+            return 1;
+    }
+
+    printf("Enter the loan amount (principal): ");
+    scanf("%lf", &principal);
+
+    double monthlyPayment = calculateMonthlyPayment(principal, annualInterestRate, loanTermMonths);
+    double totalPayment = monthlyPayment * loanTermMonths;
+
+    printf("\nLoan Summary:\n");
+    printf("Principal: $%.2f\n", principal);
+    printf("Annual Interest Rate: %.2f%%\n", annualInterestRate);
+    printf("Loan Term: %d years (%d months)\n", loanTermMonths / 12, loanTermMonths);
+    printf("Monthly Payment: $%.2f\n", monthlyPayment);
+    printf("Total Payment: $%.2f\n", totalPayment);
+
+    showRepaymentSchedule(principal, annualInterestRate, loanTermMonths);
+    return 0;
+}
+
 void menu(void)
 {   int choice;
     system("cls");
     system("color 9");
     printf("\n\n\t\t\tCUSTOMER ACCOUNT BANKING MANAGEMENT SYSTEM");
     printf("\n\n\n\t\t\t\xB2\xB2\xB2\xB2\xB2\xB2\xB2 WELCOME TO THE MAIN MENU \xB2\xB2\xB2\xB2\xB2\xB2\xB2");
-    printf("\n\n\t\t1.Create new account\n\t\t2.Update information of existing account\n\t\t3.For transactions\n\t\t4.Check the details of existing account\n\t\t5.Removing existing account\n\t\t6.View customer's list\n\t\t7.Exit\n\n\n\n\n\t\t Enter your choice:");
+    printf("\n\n\t\t1.Create new account\n\t\t2.Update information of existing account\n\t\t3.For transactions\n\t\t4.Check the details of existing account\n\t\t5.Removing existing account\n\t\t6.View customer's list\n\t\t7.Loans\n\t\t8.Exit\n\n\n\n\n\t\t Enter your choice:");
     scanf("%d",&choice);
 
     system("cls");
@@ -565,30 +589,22 @@ void menu(void)
         break;
         case 6:view_list();
         break;
-        case 7:exit(0);
+        case 7:loan();
+        break;
+        case 8:exit(0);
         break;
 
     }
 
 
-
 }
-int main()
+int main() 
 {
     char pass[10],password[10]="codewithc";
     int i=0;
     printf("\n\n\t\tEnter the password to login:");
     scanf("%s",pass);
-    /*do
-    {
-    //if (pass[i]!=13&&pass[i]!=8)
-        {
-            printf("*");
-            pass[i]=getch();
-            i++;
-        }
-    }while (pass[i]!=13);
-    pass[10]='\0';*/
+
     if (strcmp(pass,password)==0)
         {printf("\n\nPassword Match!\nLOADING");
         for(i=0;i<=6;i++)
